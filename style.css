@@ -1,0 +1,229 @@
+/* =========================================
+   RESET Y BASE RESPONSIVE
+   ========================================= */
+:root {
+    --nav-bg: #ffffff;
+    --primary-blue: #4a90e2;
+    --bg-light: #f4f7f6;
+    --bg-dark: #121212;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: var(--bg-light);
+    transition: background-color 0.3s ease;
+    padding-bottom: 40px; /* Espacio al final para scroll en móvil */
+}
+
+/* Evita zoom automático en inputs en iPhone */
+input, select, button {
+    font-size: 16px !important; 
+}
+
+/* =========================================
+   MENÚ DE NAVEGACIÓN (STICKY & TOUCH)
+   ========================================= */
+.main-nav {
+    background-color: var(--nav-bg);
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    flex-wrap: wrap; /* Permite que los botones bajen si no caben */
+}
+
+.nav-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--primary-blue);
+    background: transparent;
+    color: var(--primary-blue);
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    flex: 1 1 auto; /* Los botones crecen para llenar espacio */
+    text-align: center;
+    max-width: 150px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.nav-btn.active {
+    background: var(--primary-blue);
+    color: white;
+    box-shadow: 0 2px 5px rgba(74, 144, 226, 0.4);
+}
+
+/* =========================================
+   CONTENEDORES Y TARJETAS
+   ========================================= */
+.content-wrapper {
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.app-section {
+    display: none;
+    width: 100%;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.app-section.active {
+    display: flex;
+}
+
+/* Tarjeta Base Responsive */
+.card-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 400px; /* No se hará gigante en PC */
+    box-sizing: border-box;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Grid para la sección de tiempo en Desktop */
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    align-items: center;
+}
+
+/* En tablets y PC, poner tarjetas de tiempo lado a lado */
+@media (min-width: 900px) {
+    .grid-container {
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        max-width: 1200px;
+    }
+    .card-container {
+        width: 300px;
+    }
+}
+
+/* =========================================
+   ELEMENTOS DE FORMULARIO
+   ========================================= */
+h1, h2 { margin: 0 0 1rem 0; color: #333; font-size: 1.4rem; }
+
+.input-group {
+    display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; text-align: left;
+}
+
+label { font-size: 0.85rem; color: #666; font-weight: 600; margin-left: 2px; }
+
+input[type="text"], input[type="number"], input[type="time"], select {
+    width: 100%; padding: 12px; 
+    border: 2px solid #e0e0e0; border-radius: 10px;
+    box-sizing: border-box; outline: none;
+    background: #f9f9f9; transition: border 0.3s;
+}
+
+input:focus, select:focus {
+    border-color: var(--primary-blue);
+    background: #fff;
+}
+
+button {
+    border: none; padding: 14px; font-size: 1rem;
+    border-radius: 10px; cursor: pointer; font-weight: 600;
+    width: 100%; margin-top: 10px;
+    transition: transform 0.1s;
+}
+button:active { transform: scale(0.98); }
+
+.btn-primary { background-color: var(--primary-blue); color: white; }
+.btn-success { background-color: #28a745; color: white; }
+
+/* =========================================
+   SECCIÓN QR / BARRAS
+   ========================================= */
+.options-container {
+    display: flex; justify-content: center; gap: 15px; margin: 10px 0;
+}
+.option-label {
+    display: flex; align-items: center; gap: 5px;
+    padding: 8px 15px; background: #eee; border-radius: 20px;
+    cursor: pointer;
+}
+.result-card {
+    display: none; flex-direction: column; align-items: center;
+    background: #fff; padding: 15px; border-radius: 10px;
+    border: 2px dashed #ddd; margin-bottom: 15px;
+}
+#qrcode-output img, #barcode-output { max-width: 100%; height: auto; }
+
+/* =========================================
+   SECCIÓN PRECIOS (Tema Oscuro Específico)
+   ========================================= */
+.dark-theme-card {
+    background-color: #1f1f1f; color: white;
+}
+.dark-theme-card h2 { color: white; }
+.dark-theme-card input {
+    background-color: #2b2b2b; border-color: #444; color: white;
+}
+.dark-theme-card .row {
+    display: flex; justify-content: space-between; 
+    padding: 8px 0; border-bottom: 1px solid #333; color: #aaa; font-size: 0.9rem;
+}
+.dark-theme-card .value { color: white; font-weight: bold; }
+.savings-box {
+    background: #107C10; padding: 15px; border-radius: 12px; margin-top: 15px;
+}
+.savings-box.loss { background: #d63031; }
+.savings-box.neutral { background: #555; }
+.savings-box.hidden { opacity: 0; display: none; }
+.savings-box .amount { display: block; font-size: 2rem; font-weight: bold; margin: 5px 0; }
+
+/* =========================================
+   SECCIÓN TIEMPO (Conversor y Parking)
+   ========================================= */
+.converter-row {
+    display: flex; gap: 5px;
+}
+.converter-row input { flex: 2; }
+.converter-row select { flex: 1; min-width: 80px; }
+
+.arrow-separator { font-size: 1.5rem; color: var(--primary-blue); margin: 5px 0; }
+
+.time-inputs { display: flex; gap: 10px; }
+
+.result-display-large {
+    border-radius: 10px; padding: 15px;
+    font-size: 1.8rem; font-weight: bold;
+    display: flex; justify-content: center; align-items: center;
+    margin-top: 5px;
+}
+.money-box { background-color: #e8f5e9; color: #28a745; border: 1px solid #c3e6cb; }
+.clock-box { background-color: #e3f2fd; color: #0056b3; border: 1px solid #90caf9; }
+
+.rate-info { font-size: 0.8rem; color: #999; margin-top: 5px; }
+
+/* =========================================
+   MODO OSCURO DEL BODY
+   ========================================= */
+body.dark-mode { background-color: #121212; }
+body.dark-mode .main-nav { background-color: #1f1f1f; border-bottom: 1px solid #333; }
+body.dark-mode .nav-btn { color: #aaa; border-color: #444; }
+body.dark-mode .nav-btn.active { background: #333; color: white; border-color: white; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

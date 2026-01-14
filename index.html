@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Herramientas Móviles🛠️</title>
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+</head>
+<body>
+
+    <nav class="main-nav">
+        <button class="nav-btn active" onclick="switchTab('codes')">QR/Barras</button>
+        <button class="nav-btn" onclick="switchTab('prices')">Precios</button>
+        <button class="nav-btn" onclick="switchTab('time')">Tiempo</button>
+    </nav>
+
+    <div class="content-wrapper">
+        <div id="section-codes" class="app-section active">
+            <div class="card-container">
+                <h1>Generador de Códigos</h1>
+                <div class="input-group">
+                    <input type="text" id="codeUserInput" placeholder="Escribe aquí...">
+                    <div class="options-container">
+                        <label class="option-label">
+                            <input type="radio" name="tipoCodigo" value="qr" checked> <span>QR</span>
+                        </label>
+                        <label class="option-label">
+                            <input type="radio" name="tipoCodigo" value="bar"> <span>Barras</span>
+                        </label>
+                    </div>
+                    <button id="btnGenerar" class="btn-primary">Generar</button>
+                </div>
+
+                <div class="results-area">
+                    <div id="qr-card" class="result-card">
+                        <h3>QR Listo</h3>
+                        <div id="qrcode-output"></div>
+                    </div>
+                    <div id="barcode-card" class="result-card">
+                        <h3>Código Barras</h3>
+                        <canvas id="barcode-output"></canvas>
+                    </div>
+                    <div id="download-section" class="download-container" style="display: none;">
+                        <button id="btnDescargar" class="btn-success">Descargar Imagen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-prices" class="app-section">
+            <div class="card-container dark-theme-card">
+                <h2>Calculadora Ahorro</h2>
+                <p class="subtitle">Compara tus gastos anuales</p>
+                
+                <div class="inputs-container">
+                    <div class="input-group">
+                        <label>Pago Semanal ($)</label>
+                        <input type="number" id="weeklyInput" placeholder="0" inputmode="decimal">
+                    </div>
+                    <div class="input-group">
+                        <label>Pago Mensual ($)</label>
+                        <input type="number" id="monthlyInput" placeholder="0" inputmode="decimal">
+                    </div>
+                    <div class="input-group">
+                        <label>Anualidad Oferta ($)</label>
+                        <input type="number" id="yearlyInput" placeholder="0" inputmode="decimal">
+                    </div>
+                </div>
+                <hr>
+                <div class="results-display">
+                    <div class="row">
+                        <span>Semanal x52:</span>
+                        <span class="value" id="totalWeeklyYear">$0</span>
+                    </div>
+                    <div class="row">
+                        <span>Mensual x12:</span>
+                        <span class="value" id="totalMonthlyYear">$0</span>
+                    </div>
+                    <div class="row highlight">
+                        <span>Tu Anualidad:</span>
+                        <span class="value" id="yearlyDisplay">$0</span>
+                    </div>
+                </div>
+                <div class="savings-box hidden" id="savingsBox">
+                    <span class="label">Resultado</span>
+                    <span class="amount" id="savingsAmount">$0</span>
+                    <span class="detail" id="savingsDetail">...</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-time" class="app-section">
+            <div class="grid-container">
+                <div class="card-container">
+                    <h2>🚗 Parking</h2>
+                    <div class="input-group">
+                        <label>Horas:</label>
+                        <input type="number" id="parkingInput" placeholder="Ej: 2" value="1" inputmode="decimal">
+                    </div>
+                    <div class="result-display-large money-box">
+                        <span id="parkingResult">$ 10.00</span>
+                    </div>
+                    <p class="rate-info">$10.00 / hora</p>
+                </div>
+
+                <div class="card-container">
+                    <h2>⏱️ Conversor</h2>
+                    <div class="converter-row">
+                        <input type="number" id="inputTop" placeholder="0" inputmode="decimal">
+                        <select id="unitTop">
+                            <option value="seconds">Seg</option>
+                            <option value="minutes" selected>Min</option>
+                            <option value="hours">Hrs</option>
+                            <option value="days">Días</option>
+                        </select>
+                    </div>
+                    <div class="arrow-separator">⇅</div>
+                    <div class="converter-row">
+                        <input type="number" id="inputBottom" placeholder="0" inputmode="decimal">
+                        <select id="unitBottom">
+                            <option value="seconds">Seg</option>
+                            <option value="minutes">Min</option>
+                            <option value="hours" selected>Hrs</option>
+                            <option value="days">Días</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card-container">
+                    <h2>➕ Sumar Tiempo</h2>
+                    <div class="input-group">
+                        <label>Inicio:</label>
+                        <input type="time" id="startTime" value="08:35">
+                    </div>
+                    <div class="input-group">
+                        <label>Agregar:</label>
+                        <div class="time-inputs">
+                            <input type="number" id="addHours" placeholder="Hrs" inputmode="numeric">
+                            <input type="number" id="addMinutes" placeholder="Min" inputmode="numeric">
+                        </div>
+                    </div>
+                    <div class="result-display-large clock-box">
+                        <span id="endTimeResult">--:--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
