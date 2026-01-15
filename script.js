@@ -2,27 +2,21 @@
    1. NAVEGACIÓN
    =========================================== */
 function switchTab(tabName) {
-    // 1. Ocultar todo
     document.querySelectorAll('.app-section').forEach(sec => sec.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
 
-    // 2. Mostrar seleccionado
     document.getElementById('section-' + tabName).classList.add('active');
     
-    // 3. Activar botón
     const buttons = document.querySelectorAll('.nav-btn');
     if(tabName === 'codes') buttons[0].classList.add('active');
     if(tabName === 'prices') buttons[1].classList.add('active');
     if(tabName === 'time') buttons[2].classList.add('active');
 
-    // 4. Modo Oscuro (Solo Precios)
     if (tabName === 'prices') {
         document.body.classList.add('dark-mode');
     } else {
         document.body.classList.remove('dark-mode');
     }
-    
-    // Scroll suave arriba al cambiar
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -37,10 +31,9 @@ let ultimoTipoGenerado = null;
 if(btnGenerar) {
     btnGenerar.addEventListener('click', procesarCodigo);
     btnDescargar.addEventListener('click', descargarImagen);
-    // Permitir "Enter" en el teclado del celular
     inputUser.addEventListener('keyup', (e) => {
         if (e.key === "Enter") {
-            inputUser.blur(); // Cierra el teclado del cel
+            inputUser.blur(); 
             procesarCodigo();
         }
     });
@@ -55,7 +48,6 @@ function procesarCodigo() {
     const qrOutputDiv = document.getElementById('qrcode-output');
     const canvas = document.getElementById('barcode-output');
     
-    // Limpieza visual
     qrOutputDiv.innerHTML = "";
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -139,9 +131,8 @@ function calculatePrices() {
     
     if (y > 0 && (annualW > 0 || annualM > 0)) {
         savingsBox.classList.remove('hidden');
-        savingsBox.style.display = 'block'; // Asegura visualización
+        savingsBox.style.display = 'block';
 
-        // Comparar contra el más barato de las opciones mensuales/semanales
         let benchmark = (annualW > 0 && annualM > 0) ? Math.min(annualW, annualM) : Math.max(annualW, annualM);
         let diff = benchmark - y;
         
@@ -149,7 +140,7 @@ function calculatePrices() {
         const amount = document.getElementById('savingsAmount');
         const detail = document.getElementById('savingsDetail');
 
-        savingsBox.className = 'savings-box'; // Reset clases
+        savingsBox.className = 'savings-box'; 
 
         if (diff > 0) {
             savingsBox.style.backgroundColor = "#107C10";
@@ -173,8 +164,39 @@ function calculatePrices() {
 }
 
 /* ===========================================
-   4. TIEMPO (Conversor y Otros)
+   4. TIEMPO (Conversor y Parking)
    =========================================== */
+
+// --- LÓGICA DE FORMATO LEGIBLE ---
+function formatHumanTime(val, unit) {
+    // Si el valor no es válido
+    if (isNaN(val)) return "";
+    
+    // Si elegimos "Horas" y tenemos decimales
+    if (unit === 'hours') {
+        const hrs = Math.floor(val);
+        const mins = Math.round((val - hrs) * 60);
+        
+        // Ej: 119 min -> 1.98h -> 1 h y 59 min
+        if (hrs > 0 && mins > 0) return `${hrs} h y ${mins} min`;
+        if (hrs > 0 && mins === 0) return `${hrs} horas`;
+        if (hrs === 0) return `${mins} minutos`;
+    }
+    
+    // Si elegimos "Días" y tenemos decimales
+    if (unit === 'days') {
+        const days = Math.floor(val);
+        const hrs = Math.round((val - days) * 24);
+        
+        if (days > 0 && hrs > 0) return `${days} d y ${hrs} h`;
+        if (days > 0 && hrs === 0) return `${days} días`;
+        if (days === 0) return `${hrs} horas`;
+    }
+
+    // Para el resto (segundos, minutos puros) o si son enteros
+    return parseFloat(val.toFixed(2));
+}
+
 const tInputA = document.getElementById('inputTop');
 const tInputB = document.getElementById('inputBottom');
 const tUnitA = document.getElementById('unitTop');
@@ -187,29 +209,46 @@ function convertTime(direction) {
     const unitSrc = direction === 'down' ? tUnitA : tUnitB;
     const unitDest = direction === 'down' ? tUnitB : tUnitA;
     
+    // ParseFloat directo. Si el usuario escribe texto en el input fuente, se limpia.
     let val = parseFloat(inputSrc.value);
-    if (isNaN(val)) { inputDest.value = ""; return; }
+    
+    if (isNaN(val)) { 
+        // No borramos si está escribiendo, solo si está vacío
+        if(inputSrc.value === "") inputDest.value = ""; 
+        return; 
+    }
     
     const sec = val * rates[unitSrc.value];
     const res = sec / rates[unitDest.value];
     
-    // Redondear bonito (máx 4 decimales)
-    inputDest.value = parseFloat(res.toFixed(4));
+    // Usamos la nueva función de formato
+    inputDest.value = formatHumanTime(res, unitDest.value);
 }
 
 if(tInputA) {
+    // Eventos para calcular al escribir o cambiar unidad
     tInputA.addEventListener('input', () => convertTime('down'));
+    // Al hacer click en el input, si tiene texto tipo "1 h y 50 min", 
+    // lo limpiamos para que puedas escribir un número nuevo fácilmente
+    tInputA.addEventListener('focus', function() { if(isNaN(this.value)) this.value = ""; });
+    
     tInputB.addEventListener('input', () => convertTime('up'));
+    tInputB.addEventListener('focus', function() { if(isNaN(this.value)) this.value = ""; });
+
     tUnitA.addEventListener('change', () => convertTime('down'));
     tUnitB.addEventListener('change', () => convertTime('down'));
 }
 
-// --- Parking ---
+// --- Parking (Actualizado a $10 por 2 horas = $5/h) ---
 const parkInput = document.getElementById('parkingInput');
+// Tarifa: $5 pesos por hora
+const pricePerHour = 5; 
+
 if(parkInput) {
     parkInput.addEventListener('input', function() {
-        const h = parseFloat(this.value);
-        const total = (isNaN(h) || h < 0) ? 0 : h * 10;
+        let h = parseFloat(this.value);
+        if (isNaN(h) || h < 0) h = 0;
+        const total = h * pricePerHour;
         document.getElementById('parkingResult').innerText = `$ ${total.toFixed(2)}`;
     });
 }

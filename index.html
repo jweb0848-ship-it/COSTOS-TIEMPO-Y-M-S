@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Herramientas Móviles🛠️</title>
-    
+    <title>Herramientas Móviles</title>
     <link rel="stylesheet" href="style.css">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
 </head>
@@ -55,7 +53,6 @@
             <div class="card-container dark-theme-card">
                 <h2>Calculadora Ahorro</h2>
                 <p class="subtitle">Compara tus gastos anuales</p>
-                
                 <div class="inputs-container">
                     <div class="input-group">
                         <label>Pago Semanal ($)</label>
@@ -102,15 +99,15 @@
                         <input type="number" id="parkingInput" placeholder="Ej: 2" value="1" inputmode="decimal">
                     </div>
                     <div class="result-display-large money-box">
-                        <span id="parkingResult">$ 10.00</span>
+                        <span id="parkingResult">$ 5.00</span>
                     </div>
-                    <p class="rate-info">$10.00 / hora</p>
+                    <p class="rate-info">Tarifa: $10.00 cada 2 horas ($5/h)</p>
                 </div>
 
                 <div class="card-container">
                     <h2>⏱️ Conversor</h2>
                     <div class="converter-row">
-                        <input type="number" id="inputTop" placeholder="0" inputmode="decimal">
+                        <input type="text" id="inputTop" placeholder="0" inputmode="decimal" autocomplete="off">
                         <select id="unitTop">
                             <option value="seconds">Seg</option>
                             <option value="minutes" selected>Min</option>
@@ -120,7 +117,7 @@
                     </div>
                     <div class="arrow-separator">⇅</div>
                     <div class="converter-row">
-                        <input type="number" id="inputBottom" placeholder="0" inputmode="decimal">
+                        <input type="text" id="inputBottom" placeholder="0" inputmode="decimal" autocomplete="off">
                         <select id="unitBottom">
                             <option value="seconds">Seg</option>
                             <option value="minutes">Min</option>
